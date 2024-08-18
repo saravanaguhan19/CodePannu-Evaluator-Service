@@ -1,11 +1,11 @@
 import express, { Express } from "express";
 
 import serverConfig from "./config/serverConfig";
-
-
+import apiRouter from "./routes";
 
 const app: Express = express();
-const x = 1;
+
+app.use("/api", apiRouter);
 
 app.listen(serverConfig.PORT, () => {
   console.log(`Server started to listen at :${serverConfig.PORT}`);
