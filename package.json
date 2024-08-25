@@ -25,9 +25,11 @@
   },
   "dependencies": {
     "@bull-board/express": "^5.21.4",
+    "@types/dockerode": "^3.3.31",
     "@types/ioredis": "^5.0.0",
     "bullmq": "^5.12.9",
     "concurrently": "^8.2.2",
+    "dockerode": "^4.0.2",
     "dotenv": "^16.4.5",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "express": "^4.19.2",
