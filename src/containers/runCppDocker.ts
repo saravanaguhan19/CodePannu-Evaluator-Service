@@ -1,16 +1,16 @@
 // import Docker from "dockerode";
 
-import { JAVA_IMAGE } from "../utils/constants";
+import { CPP_IMAGE } from "../utils/constants";
 import createContainer from "./containerFactory";
 import decodeDockerStream from "./dockerHelper";
 import pullImage from "./pullImage";
 
-async function runJava(code: string, inputTestCase: string) {
+async function runCpp(code: string, inputTestCase: string) {
   console.log("Initialising a new java docker container");
 
   const rawLogBuffer: Buffer[] = [];
 
-  await pullImage(JAVA_IMAGE);
+  await pullImage(CPP_IMAGE);
 
   // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
   //   "python3",
@@ -24,24 +24,24 @@ async function runJava(code: string, inputTestCase: string) {
   const runCommand = `echo '${code.replace(
     /'/g,
     `'\\"`
-  )}' > Main.java && javac Main.java && echo '${inputTestCase.replace(
+  )}' > main.cpp && g++ main.cpp -o main && echo '${inputTestCase.replace(
     /'/g,
     `'\\"`
-  )}' | java Main`;
+  )}' | stdbuf -oL -eL ./main`;
   console.log(runCommand);
 
-  const javaDockerContainer = await createContainer(JAVA_IMAGE, [
+  const cppDockerContainer = await createContainer(CPP_IMAGE, [
     "/bin/sh",
     "-c",
     runCommand,
   ]);
 
   // starting / booting the corresponding docker container
-  await javaDockerContainer.start();
+  await cppDockerContainer.start();
 
   console.log("Started the docker container");
 
-  const loggerStream = await javaDockerContainer.logs({
+  const loggerStream = await cppDockerContainer.logs({
     stdout: true,
     stderr: true,
     timestamps: false,
@@ -59,13 +59,13 @@ async function runJava(code: string, inputTestCase: string) {
       const decodedStream = decodeDockerStream(completeBuffer);
       console.log(decodedStream);
       console.log(decodedStream.stdout);
-      
+
       res(decodedStream);
     });
   });
 
   //remove the container when done with it
-  await javaDockerContainer.remove();
+  await cppDockerContainer.remove();
 }
 
-export default runJava;
+export default runCpp;

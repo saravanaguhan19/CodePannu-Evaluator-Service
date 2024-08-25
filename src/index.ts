@@ -3,7 +3,7 @@ import express, { Express } from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig";
 import serverConfig from "./config/serverConfig";
-import runJava from "./containers/runJavaDocker";
+import runCpp from "./containers/runCppDocker";
 // import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
@@ -54,22 +54,41 @@ app.listen(serverConfig.PORT, () => {
   // print("value of y:",y)
   // `;
 
+  //   const code = `
+  // import java.util.*;
+  // public class Main {
+  //   public static void main(String[] args){
+  //     Scanner scn = new Scanner(System.in);
+  //     int input = scn.nextInt();
+  //     System.out.println("input value given by user: "+ input );
+  //     for(int i = 0 ; i < input ; i++){
+  //       System.out.println(i);
+  //     }
+  //   }
+  // }
+  // `;
+
   const code = `
-import java.util.*;
-public class Main {
-  public static void main(String[] args){
-    Scanner scn = new Scanner(System.in);
-    int input = scn.nextInt();
-    System.out.println("input value given by user: "+ input );
-    for(int i = 0 ; i < input ; i++){
-      System.out.println(i);
-    }
+#include<iostream>
+using namespace std;
+
+int main(){
+
+  int x;
+  cin>>x;
+  cout<<"Value of x is "<< x <<" ";
+  for(int i = 0 ; i < x; i++){
+    cout<<i << " ";
   }
+  cout<<endl;
+  return 0;
 }
 `;
 
-  const inputCase = `5
+  const inputCase = `10
 `;
 
-  runJava(code, inputCase);
+  // runJava(code, inputCase);
+
+  runCpp(code, inputCase);
 });
