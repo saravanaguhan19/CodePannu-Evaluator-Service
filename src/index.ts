@@ -3,7 +3,7 @@ import express, { Express } from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig";
 import serverConfig from "./config/serverConfig";
-import runPython from "./containers/runPythonDocker";
+import runJava from "./containers/runJavaDocker";
 // import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
 import SampleWorker from "./workers/SampleWorker";
@@ -48,17 +48,28 @@ app.listen(serverConfig.PORT, () => {
   // print("value of x:",x)
   // `;
 
-  const code = `x=input()
-y=input()
-print("value of x:",x)
-print("value of y:",y)  
+  //   const code = `x=input()
+  // y=input()
+  // print("value of x:",x)
+  // print("value of y:",y)
+  // `;
+
+  const code = `
+import java.util.*;
+public class Main {
+  public static void main(String[] args){
+    Scanner scn = new Scanner(System.in);
+    int input = scn.nextInt();
+    System.out.println("input value given by user: "+ input );
+    for(int i = 0 ; i < input ; i++){
+      System.out.println(i);
+    }
+  }
+}
 `;
 
-const inputCase = `100
-200
+  const inputCase = `5
 `;
 
-
-  runPython(code, inputCase
-);
+  runJava(code, inputCase);
 });
