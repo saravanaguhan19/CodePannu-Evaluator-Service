@@ -3,10 +3,14 @@ import express, { Express } from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig";
 import serverConfig from "./config/serverConfig";
-import runCpp from "./containers/runCppDocker";
+import sampleQueueProducer from "./producers/sampleQueueProducer";
+import submissionQueueProducer from "./producers/submissionQueueProducer";
+// import runCpp from "./containers/runCppDocker";
 // import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
-import SampleWorker from "./workers/SampleWorker";
+import { SUBMISSION_QUEUE } from "./utils/constants";
+// import SampleWorker from "./workers/SampleWorker";
+import SubmissionWorker from "./workers/SubmissionWorker";
 
 const app: Express = express();
 
@@ -23,26 +27,28 @@ app.listen(serverConfig.PORT, () => {
 
   console.log("bull board running");
 
-  SampleWorker("SampleQueue");
-  // sampleQueueProducer(
-  //   "SampleJob",
-  //   {
-  //     name: "saravana ",
-  //     company: "Vetti",
-  //     location: "chennai",
-  //   },
-  //   5
-  // );
+  // SampleWorker("SampleQueue");
 
-  // sampleQueueProducer(
-  //   "SampleJob",
-  //   {
-  //     name: "saravana 2 priority",
-  //     company: "Vetti ccc",
-  //     location: "chennai cc",
-  //   },
-  //   2
-  // );
+  SubmissionWorker(SUBMISSION_QUEUE);
+  sampleQueueProducer(
+    "SampleJob",
+    {
+      name: "saravana ",
+      company: "Vetti",
+      location: "chennai",
+    },
+    5
+  );
+
+  sampleQueueProducer(
+    "SampleJob",
+    {
+      name: "saravana 2 priority",
+      company: "Vetti ccc",
+      location: "chennai cc",
+    },
+    2
+  );
 
   // const code = `x = input()
   // print("value of x:",x)
@@ -69,26 +75,34 @@ app.listen(serverConfig.PORT, () => {
   // `;
 
   const code = `
-#include<iostream>
-using namespace std;
+  #include<iostream>
+  using namespace std;
 
-int main(){
+  int main(){
 
-  int x;
-  cin>>x;
-  cout<<"Value of x is "<< x <<" ";
-  for(int i = 0 ; i < x; i++){
-    cout<<i << " ";
+    int x;
+    cin>>x;
+    cout<<"Value of x is "<< x <<" ";
+    for(int i = 0 ; i < x; i++){
+      cout<<i << " ";
+    }
+    cout<<endl;
+    return 0;
   }
-  cout<<endl;
-  return 0;
-}
-`;
+  `;
 
   const inputCase = `10
-`;
+  `;
+
+  submissionQueueProducer({
+    "1234": {
+      language: "CPP",
+      code: code,
+      inputCase: inputCase,
+    },
+  });
 
   // runJava(code, inputCase);
 
-  runCpp(code, inputCase);
+  // runCpp(code, inputCase);
 });
