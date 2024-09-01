@@ -4,21 +4,21 @@ import {
   CodeExecutorStrategy,
   ExecutionResponse,
 } from "../types/CodeExecutorStrategy";
-import { CPP_IMAGE } from "../utils/constants";
+import { JAVA_IMAGE } from "../utils/constants";
 import createContainer from "./containerFactory";
 import decodeDockerStream from "./dockerHelper";
 import pullImage from "./pullImage";
 
-class CppExecutor implements CodeExecutorStrategy {
+class JavaExecutor implements CodeExecutorStrategy {
   async execute(
     code: string,
     inputTestCase: string
   ): Promise<ExecutionResponse> {
-    console.log("Initialising a new Cpp docker container");
+    console.log("Initialising a new java docker container");
 
     const rawLogBuffer: Buffer[] = [];
 
-    await pullImage(CPP_IMAGE);
+    await pullImage(JAVA_IMAGE);
 
     // const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
     //   "python3",
@@ -32,24 +32,24 @@ class CppExecutor implements CodeExecutorStrategy {
     const runCommand = `echo '${code.replace(
       /'/g,
       `'\\"`
-    )}' > main.cpp && g++ main.cpp -o main && echo '${inputTestCase.replace(
+    )}' > Main.java && javac Main.java && echo '${inputTestCase.replace(
       /'/g,
       `'\\"`
-    )}' | stdbuf -oL -eL ./main`;
+    )}' | java Main`;
     console.log(runCommand);
 
-    const cppDockerContainer = await createContainer(CPP_IMAGE, [
+    const javaDockerContainer = await createContainer(JAVA_IMAGE, [
       "/bin/sh",
       "-c",
       runCommand,
     ]);
 
     // starting / booting the corresponding docker container
-    await cppDockerContainer.start();
+    await javaDockerContainer.start();
 
     console.log("Started the docker container");
 
-    const loggerStream = await cppDockerContainer.logs({
+    const loggerStream = await javaDockerContainer.logs({
       stdout: true,
       stderr: true,
       timestamps: false,
@@ -70,7 +70,7 @@ class CppExecutor implements CodeExecutorStrategy {
       return { output: error as string, status: "ERROR" };
     } finally {
       //remove the container when done with it
-      await cppDockerContainer.remove();
+      await javaDockerContainer.remove();
     }
   }
 
@@ -94,4 +94,4 @@ class CppExecutor implements CodeExecutorStrategy {
   }
 }
 
-export default CppExecutor;
+export default JavaExecutor;
