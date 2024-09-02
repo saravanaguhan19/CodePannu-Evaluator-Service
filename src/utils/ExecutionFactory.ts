@@ -1,6 +1,6 @@
+import CppExecutor from "../containers/cppExecutor";
 import JavaExecutor from "../containers/javaExecutor";
 import PythonExecutor from "../containers/pythonExecutor";
-import CppExecutor from "../containers/runCppDocker";
 import { CodeExecutorStrategy } from "../types/CodeExecutorStrategy";
 
 export default function createExecutor(
@@ -10,7 +10,7 @@ export default function createExecutor(
     return new PythonExecutor();
   } else if (codeLanguage === "CPP") {
     return new CppExecutor();
-  } else if (codeLanguage === "JAVA") {
+  } else if (codeLanguage.toLowerCase() === "java") {
     return new JavaExecutor();
   } else {
     return null;

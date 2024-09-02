@@ -12,8 +12,11 @@ import pullImage from "./pullImage";
 class CppExecutor implements CodeExecutorStrategy {
   async execute(
     code: string,
-    inputTestCase: string
+    inputTestCase: string,
+    outputTestCase: string
   ): Promise<ExecutionResponse> {
+    console.log(code, inputTestCase, outputTestCase);
+
     console.log("Initialising a new Cpp docker container");
 
     const rawLogBuffer: Buffer[] = [];

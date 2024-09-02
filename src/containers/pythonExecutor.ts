@@ -1,13 +1,21 @@
 // import Docker from "dockerode";
 
-import { CodeExecutorStrategy, ExecutionResponse } from "../types/CodeExecutorStrategy";
+import {
+  CodeExecutorStrategy,
+  ExecutionResponse,
+} from "../types/CodeExecutorStrategy";
 import { PYTHON_IMAGE } from "../utils/constants";
 import createContainer from "./containerFactory";
 import decodeDockerStream from "./dockerHelper";
 import pullImage from "./pullImage";
 
 class PythonExecutor implements CodeExecutorStrategy {
-  async execute(code: string, inputTestCase: string): Promise<ExecutionResponse> {
+  async execute(
+    code: string,
+    inputTestCase: string,
+    outputTestCase: string
+  ): Promise<ExecutionResponse> {
+    console.log(code, inputTestCase, outputTestCase);
     const rawLogBuffer: Buffer[] = [];
 
     await pullImage(PYTHON_IMAGE);

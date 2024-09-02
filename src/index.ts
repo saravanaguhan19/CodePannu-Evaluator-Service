@@ -3,8 +3,8 @@ import express, { Express } from "express";
 
 import bullBoardAdapter from "./config/bullBoardConfig";
 import serverConfig from "./config/serverConfig";
-import sampleQueueProducer from "./producers/sampleQueueProducer";
-import submissionQueueProducer from "./producers/submissionQueueProducer";
+// import sampleQueueProducer from "./producers/sampleQueueProducer";
+// import submissionQueueProducer from "./producers/submissionQueueProducer";
 // import runCpp from "./containers/runCppDocker";
 // import sampleQueueProducer from "./producers/sampleQueueProducer";
 import apiRouter from "./routes";
@@ -30,25 +30,25 @@ app.listen(serverConfig.PORT, () => {
   // SampleWorker("SampleQueue");
 
   SubmissionWorker(SUBMISSION_QUEUE);
-  sampleQueueProducer(
-    "SampleJob",
-    {
-      name: "saravana ",
-      company: "Vetti",
-      location: "chennai",
-    },
-    5
-  );
+  // sampleQueueProducer(
+  //   "SampleJob",
+  //   {
+  //     name: "saravana ",
+  //     company: "Vetti",
+  //     location: "chennai",
+  //   },
+  //   5
+  // );
 
-  sampleQueueProducer(
-    "SampleJob",
-    {
-      name: "saravana 2 priority",
-      company: "Vetti ccc",
-      location: "chennai cc",
-    },
-    2
-  );
+  // sampleQueueProducer(
+  //   "SampleJob",
+  //   {
+  //     name: "saravana 2 priority",
+  //     company: "Vetti ccc",
+  //     location: "chennai cc",
+  //   },
+  //   2
+  // );
 
   // const code = `x = input()
   // print("value of x:",x)
@@ -74,33 +74,34 @@ app.listen(serverConfig.PORT, () => {
   // }
   // `;
 
-  const code = `
-  #include<iostream>
-  using namespace std;
+  // const code = `
+  // #include<iostream>
+  // using namespace std;
 
-  int main(){
+  // int main(){
 
-    int x;
-    cin>>x;
-    cout<<"Value of x is "<< x <<" ";
-    for(int i = 0 ; i < x; i++){
-      cout<<i << " ";
-    }
-    cout<<endl;
-    return 0;
-  }
-  `;
+  //   int x;
+  //   cin>>x;
+  //   cout<<"Value of x is "<< x <<" ";
+  //   for(int i = 0 ; i < x; i++){
+  //     cout<<i << " ";
+  //   }
+  //   cout<<endl;
+  //   return 0;
+  // }
+  // `;
 
-  const inputCase = `10
-  `;
+  // const inputCase = `10
+  // `;
 
-  submissionQueueProducer({
-    "1234": {
-      language: "CPP",
-      code: code,
-      inputCase: inputCase,
-    },
-  });
+  // submissionQueueProducer({
+  //   "1234": {
+  //     language: "CPP",
+  //     code: code,
+  //     inputCase: inputCase,
+  //     outputTestCase: "23",
+  //   },
+  // });
 
   // runJava(code, inputCase);
 
